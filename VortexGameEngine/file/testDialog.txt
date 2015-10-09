@@ -1,0 +1,7 @@
+1
+Suki
+This is a test for loading dialog from a file. The way this format should work is that each line represents a whole dialog from a person. The next line represents a new dialog. It may be the same person but it will be shown as a new dialog.
+Cherisa
+This is a test for page flipping with a header. This will serve as a test to see if generating each page as needed is too slow and i should instead generate all the pages in one go. I don't currently believe that this is a problem but i wouldn't be doing a good job testing if i didn't check this.
+Suki
+Now as you can see the textbox has the ability to be synced with the camera. This allows static placement of the textbox relative to the viewport.

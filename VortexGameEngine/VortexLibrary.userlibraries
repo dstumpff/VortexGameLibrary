@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="MS932" standalone="no"?>
+<eclipse-userlibraries version="2">
+    <library name="Vortex" systemlibrary="false">
+        <archive path="/VortexGameEngine/slick.jar"/>
+        <archive path="/VortexGameEngine/Vortex.jar"/>
+        <archive path="C:/Users/Daniel/workspace/lwjgl-2.9.1/lwjgl-2.9.1/jar/jinput.jar"/>
+        <archive path="C:/Users/Daniel/workspace/lwjgl-2.9.1/lwjgl-2.9.1/jar/lwjgl.jar"/>
+        <archive path="C:/Users/Daniel/workspace/lwjgl-2.9.1/lwjgl-2.9.1/jar/lwjgl_util.jar"/>
+    </library>
+</eclipse-userlibraries>
