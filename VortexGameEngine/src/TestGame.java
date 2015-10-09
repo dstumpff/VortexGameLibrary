@@ -189,7 +189,6 @@ public class TestGame extends GameDriver{
 		
 		BackgroundMusic.addSongToQueue("01.-title.mp3");
 		BackgroundMusic.addSongToQueue("04.-speeder-bikes.mp3");
-		BackgroundMusic.addSongToQueue("01-hell-march-2.mp3");
 		
 		try{
 			BackgroundMusic.playAllInQueue();
