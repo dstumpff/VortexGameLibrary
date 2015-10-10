@@ -10,8 +10,8 @@ public abstract class Map extends GameEntity{
 		super(x, y, width, height);
 	}
 	
-	public Map(){
-		super();
+	public Map(float width, float height){
+		super(0, 0, width, height);
 	}
 	
 	public void update(GameContainer gc, int i){

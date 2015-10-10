@@ -47,7 +47,7 @@ public abstract class TileMap extends Map{
 	 * @throws SlickException
 	 */
 	public TileMap(String path, float x, float y) throws SlickException{
-		super();
+		super(x, y, 0, 0);
 		theTileMap = new TiledMap(path);
 		
 		this.setX(x);
