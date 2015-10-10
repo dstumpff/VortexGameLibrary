@@ -27,7 +27,7 @@ public abstract class GameEntity{
 	/**
 	 * The optional Camera for this entity.
 	 */
-	protected Camera theCamera;
+	private Camera theCamera;
 	/**
 	 * The start position of the entity.
 	 */

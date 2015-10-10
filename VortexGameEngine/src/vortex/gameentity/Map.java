@@ -18,8 +18,8 @@ public abstract class Map extends GameEntity{
 		setX(getX() + vX);
 		setY(getY() + vY);
 		
-		if(theCamera != null){
-			theCamera.update(gc, i);
+		if(getCamera() != null){
+			getCamera().update(gc, i);
 		}
 	}
 	

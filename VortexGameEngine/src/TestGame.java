@@ -187,8 +187,8 @@ public class TestGame extends GameDriver{
 		
 		MouseInput.addMouseInputCommand("Attack", Input.MOUSE_LEFT_BUTTON, 0);
 		
-		BackgroundMusic.addSongToQueue("01.-title.mp3");
-		BackgroundMusic.addSongToQueue("04.-speeder-bikes.mp3");
+		//BackgroundMusic.addSongToQueue("01.-title.mp3");
+		BackgroundMusic.addSongToQueue("08.-bonus-level.mp3");
 		
 		try{
 			BackgroundMusic.playAllInQueue();
