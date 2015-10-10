@@ -67,7 +67,7 @@ public class TestGame extends GameDriver{
 		Game.getAppGameContainer().setShowFPS(true);
 		//Game.getAppGameContainer().setVSync(true);
 		Game.getAppGameContainer().setTargetFrameRate(60);
-		Game.setChild(gameDriver);
+		Game.setDriver(gameDriver);
 		Game.start();
 	}
 	

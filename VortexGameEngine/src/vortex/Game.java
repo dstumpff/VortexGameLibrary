@@ -121,9 +121,9 @@ public class Game extends BasicGame{
 	/**
 	 * Sets the GameDriver to be used by this class.
 	 * 
-	 * @param child The child GameDriver object
+	 * @param driver The GameDriver object
 	 */
-	public static void setChild(GameDriver child){
+	public static void setDriver(GameDriver driver){
 		Game.child = child;
 	}
 	
