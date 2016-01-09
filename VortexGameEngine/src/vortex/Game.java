@@ -108,7 +108,6 @@ public class Game extends BasicGame{
 	 * The map currently being used.
 	 */
 	protected static Map gameMap;
-	
 	/**
 	 * The constructor for Game.
 	 * 

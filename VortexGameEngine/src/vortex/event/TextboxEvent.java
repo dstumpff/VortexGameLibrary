@@ -1,8 +1,8 @@
-package vortex.textbox;
+package vortex.event;
 
 import java.util.EventObject;
 
-import vortex.Textbox;
+import vortex.gameentity.Textbox;
 
 /**
  * An event object for Textboxes.

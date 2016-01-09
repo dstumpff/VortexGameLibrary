@@ -1,4 +1,4 @@
-package vortex.textbox;
+package vortex.event;
 
 /**
  * An event object for the Confirmbox object.

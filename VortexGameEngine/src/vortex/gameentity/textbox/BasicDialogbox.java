@@ -1,4 +1,4 @@
-package vortex.textbox;
+package vortex.gameentity.textbox;
 
 import java.io.InputStream;
 import java.util.Scanner;
@@ -7,10 +7,11 @@ import org.newdawn.slick.Font;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 
+import vortex.event.TextboxListener;
+import vortex.gameentity.Textbox;
 import vortex.input.KeyInput;
 import vortex.utilities.GraphicText;
 import vortex.Game;
-import vortex.Textbox;
 
 /**
  * A Textbox specifically designed to handle dialog.

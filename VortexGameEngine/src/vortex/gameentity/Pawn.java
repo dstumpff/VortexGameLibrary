@@ -3,11 +3,14 @@ package vortex.gameentity;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.*;
 
 import vortex.Game;
 import vortex.GameEntity;
 import vortex.collision.*;
+import vortex.utilities.ResourceLoader;
 
 /**
  * Pawn is the most basic type of GameEntity.
@@ -21,6 +24,8 @@ public class Pawn extends GameEntity{
 	 * The shape to draw.
 	 */
 	protected Shape shape;
+	protected Image img;
+	protected boolean useImage;
 	/**
 	 * Modifier to draw outline or fill shape.
 	 */
@@ -32,6 +37,7 @@ public class Pawn extends GameEntity{
 	public Pawn(){
 		super();
 		renderFilled = true;
+		useImage = false;
 	}
 	
 	/**
@@ -57,6 +63,43 @@ public class Pawn extends GameEntity{
 	public Pawn(float x, float y, float width , float height){
 		super(x, y, width, height);
 		renderFilled = true;
+	}
+	
+	@Override
+	public void init(GameContainer gc) {
+		
+	}
+	
+	public void update(GameContainer gc, int i){
+		super.update(gc, i);
+	}
+
+	@Override
+	public void render(GameContainer gc, Graphics g) {
+		g.setColor(Color.red);
+		if(shape != null){
+			if(!useImage){
+				if(renderFilled)
+					g.fill(shape);
+				else
+					g.draw(shape);
+				
+				g.setColor(Color.black);
+				g.draw(shape);
+			}
+			else if(useImage){
+				g.drawImage(img, getX(), getY());
+			}
+		}
+		super.render(gc, g);
+	}
+	
+	public void useImage(){
+		useImage = true;
+	}
+	
+	public void useGeometry(){
+		useImage = false;
 	}
 	
 	/**
@@ -124,6 +167,19 @@ public class Pawn extends GameEntity{
 		}
 	}
 	
+	public void setImage(String path){
+		try {
+			img = ResourceLoader.loadImage(path);
+		} catch (SlickException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void setImage(Image img){
+		this.img = img;
+	}
+	
 	/**
 	 * Set if the shape should be rendered filled or not.
 	 * 
@@ -139,26 +195,6 @@ public class Pawn extends GameEntity{
 	 */
 	public boolean isRenderFilled(){
 		return renderFilled;
-	}
-	
-	@Override
-	public void init(GameContainer gc) {
-		
-	}
-
-	@Override
-	public void render(GameContainer gc, Graphics g) {
-		g.setColor(Color.red);
-		if(shape != null){	
-			if(renderFilled)
-				g.fill(shape);
-			else
-				g.draw(shape);
-			
-			g.setColor(Color.black);
-			g.draw(shape);
-		}
-		super.render(gc, g);
 	}
 	
 	public void setX(float x){

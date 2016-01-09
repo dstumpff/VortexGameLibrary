@@ -7,8 +7,8 @@ import java.util.Scanner;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
-import vortex.Textbox;
 import vortex.exception.TextboxException;
+import vortex.gameentity.Textbox;
 import vortex.gameentity.map.TileMap;
 
 /**

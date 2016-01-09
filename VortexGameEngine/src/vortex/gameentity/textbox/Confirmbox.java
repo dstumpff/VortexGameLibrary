@@ -1,4 +1,4 @@
-package vortex.textbox;
+package vortex.gameentity.textbox;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -14,7 +14,10 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.geom.RoundedRectangle;
 
 import vortex.Game;
-import vortex.Textbox;
+import vortex.event.ConfirmboxEvent;
+import vortex.event.ConfirmboxListener;
+import vortex.event.TextboxListener;
+import vortex.gameentity.Textbox;
 import vortex.input.KeyInput;
 import vortex.utilities.GraphicText;
 

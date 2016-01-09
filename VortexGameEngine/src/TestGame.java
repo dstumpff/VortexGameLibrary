@@ -14,34 +14,41 @@ import org.newdawn.slick.geom.Rectangle;
 import vortex.Game;
 import vortex.GameDriver;
 import vortex.GameEntity;
-import vortex.Textbox;
+import vortex.event.ConfirmboxEvent;
+import vortex.event.ConfirmboxListener;
+import vortex.event.TextboxEvent;
+import vortex.event.TextboxListener;
+import vortex.event.TimerEvent;
+import vortex.event.TimerListener;
 import vortex.exception.TextboxException;
 import vortex.gameentity.Camera;
 import vortex.gameentity.Map;
-import vortex.gameentity.Player;
+import vortex.gameentity.Pawn;
+import vortex.gameentity.Textbox;
+import vortex.gameentity.VortexTimer;
 import vortex.gameentity.map.tilemap.BasicTileMap;
+import vortex.gameentity.textbox.BasicDialogbox;
+import vortex.gameentity.textbox.Confirmbox;
+import vortex.gameentity.timer.GameTimer;
+import vortex.gameentity.timer.RealTimer;
 import vortex.input.KeyInput;
 import vortex.input.MouseInput;
 import vortex.sound.*;
-import vortex.textbox.BasicDialogbox;
-import vortex.textbox.Confirmbox;
-import vortex.textbox.ConfirmboxEvent;
-import vortex.textbox.ConfirmboxListener;
-import vortex.textbox.TextboxEvent;
-import vortex.textbox.TextboxListener;
 import vortex.utilities.ResourceLoader;
 import static vortex.sound.BackgroundMusic.*;
 import vortex.algorithm.pathfinding.*;
 
 public class TestGame extends GameDriver{
 
+	public static final int FPS = 60;
+	
 	ArrayList<GameEntity> gameEntities = new ArrayList<GameEntity>();
 	
 	Map theTileMap;
-	TestPlayer player1;
-	Player player2;
+	Pawn player1;
+	Pawn player2;
 	PathFinding pathFinder;
-	Player player3;
+	Pawn player3;
 	Camera pawnCamera;
 	public static boolean dialogMode = false;
 	Game game;
@@ -59,6 +66,8 @@ public class TestGame extends GameDriver{
 	ArrayList<Rectangle> quadtreeNodes = new ArrayList<Rectangle>();
 	Confirmbox testBox;
 	BasicDialogbox  testBox2;
+	VortexTimer gameTimer;
+	VortexTimer realTimer;
 	
 	public static void main(String[] args){
 		gameDriver = new TestGame();
@@ -66,7 +75,7 @@ public class TestGame extends GameDriver{
 		Game.setGameWindowSize(650, 500);
 		Game.getAppGameContainer().setShowFPS(true);
 		//Game.getAppGameContainer().setVSync(true);
-		Game.getAppGameContainer().setTargetFrameRate(60);
+		Game.getAppGameContainer().setTargetFrameRate(FPS);
 		Game.setDriver(gameDriver);
 		Game.start();
 	}
@@ -102,12 +111,12 @@ public class TestGame extends GameDriver{
 		player1.setShape("Rectangle");
 		player1.setMovableCollision(true);
 		player1.setViewCollision(false);
+		player1.setImage("cube image.png");
+		player1.useImage();
 		pawnCamera = new Camera(player1, 100, 50);
 		player1.attachCamera(pawnCamera);
 		
-		//player1.getCamera().syncVerticalMovement(false);
-		
-		player2 = new Player(300, 400, 50, 50);
+		player2 = new Pawn(300, 400, 50, 50);
 		player2.setShape("Rectangle");
 		player2.setMovableCollision(false);
 		player2.useDefaultCamera();
@@ -169,12 +178,40 @@ public class TestGame extends GameDriver{
 			
 		});
 		
+		gameTimer = new GameTimer(300, 300);
+		//gameTimer.setUseCameraCoordinates(false);
+		gameTimer.setTime(5, FPS);
+		gameTimer.setRecurring(true);
+		//gameTimer.setFormat("%2d:%02d:%-2d");
+		gameTimer.addTimerListener(new TimerListener(){
+			public void timerReachedZero(TimerEvent e){
+				System.out.println("Game Timer Reached Zero");
+			}
+		});
+		//gameTimer.start();
+		
+		realTimer = new RealTimer(300, 300);
+		realTimer.addTimerListener(new TimerListener(){
+
+			@Override
+			public void timerReachedZero(TimerEvent e) {
+				System.out.println("Real Timer reached Zero");
+			}
+			
+		});
+		realTimer.setTime(20, FPS);
+		realTimer.setRecurring(true);
+		realTimer.start();
+		//realTimer.pause();
+		
 		gameEntities.add(theTileMap);
 		gameEntities.add(player1);
 		gameEntities.add(player2);
 		//gameEntities.add(player3);
 		gameEntities.add(testBox);
 		gameEntities.add(testBox2);
+		//gameEntities.add(gameTimer);
+		gameEntities.add(realTimer);
 		
 		KeyInput.addInputCommand("Move+X", Input.KEY_RIGHT, 0);
 		KeyInput.addInputCommand("Move-X", Input.KEY_LEFT, 0);

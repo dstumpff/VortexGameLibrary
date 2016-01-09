@@ -1,4 +1,4 @@
-package vortex.textbox;
+package vortex.event;
 
 /**
  * A listener that fires when it's associated Confirmbox performs an action.

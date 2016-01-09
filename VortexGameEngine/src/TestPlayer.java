@@ -2,14 +2,14 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.geom.Point;
 
 import vortex.Game;
-import vortex.gameentity.Player;
+import vortex.gameentity.Pawn;
 import vortex.input.KeyInput;
 import vortex.input.MouseInput;
 import vortex.input.MouseInputCommand;
 import vortex.sound.SoundEffect;
 
 
-public class TestPlayer extends Player {
+public class TestPlayer extends Pawn {
 	
 	boolean left, right, up, down;
 	

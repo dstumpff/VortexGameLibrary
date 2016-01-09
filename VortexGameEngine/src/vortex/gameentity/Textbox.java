@@ -1,4 +1,4 @@
-package vortex;
+package vortex.gameentity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,9 +9,10 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.RoundedRectangle;
 
+import vortex.GameEntity;
+import vortex.event.TextboxEvent;
+import vortex.event.TextboxListener;
 import vortex.input.KeyInput;
-import vortex.textbox.TextboxEvent;
-import vortex.textbox.TextboxListener;
 import vortex.utilities.GraphicText;
 
 /**
