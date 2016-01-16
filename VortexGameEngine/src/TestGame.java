@@ -37,6 +37,7 @@ import vortex.sound.*;
 import vortex.utilities.ResourceLoader;
 import static vortex.sound.BackgroundMusic.*;
 import vortex.algorithm.pathfinding.*;
+import vortex.animation.SpriteAnimation;
 
 public class TestGame extends GameDriver{
 
@@ -50,6 +51,7 @@ public class TestGame extends GameDriver{
 	PathFinding pathFinder;
 	Pawn player3;
 	Camera pawnCamera;
+	SpriteAnimation anim;
 	public static boolean dialogMode = false;
 	Game game;
 	boolean[][] tileMapPathing = {{true, true, true, false, false, false, false, false, false, true, false, false, true},
@@ -111,7 +113,7 @@ public class TestGame extends GameDriver{
 		player1.setShape("Rectangle");
 		player1.setMovableCollision(true);
 		player1.setViewCollision(false);
-		player1.setImage("cube image.png");
+		player1.setImage("catstatic.png");
 		player1.useImage();
 		pawnCamera = new Camera(player1, 100, 50);
 		player1.attachCamera(pawnCamera);
@@ -282,5 +284,6 @@ public class TestGame extends GameDriver{
 				gameEntities.get(i).render(gc, g);
 			}
 		}
+		//anim.drawSheet(gc, g);
 	}
 }

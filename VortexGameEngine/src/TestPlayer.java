@@ -2,6 +2,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.geom.Point;
 
 import vortex.Game;
+import vortex.animation.SpriteAnimation;
 import vortex.gameentity.Pawn;
 import vortex.input.KeyInput;
 import vortex.input.MouseInput;
@@ -15,14 +16,32 @@ public class TestPlayer extends Pawn {
 	
 	public TestPlayer(){
 		super();
+		setupAnimations();
 	}
 	
 	public TestPlayer(Point startPoint, float width, float height){
 		super(startPoint, width, height);
+		setupAnimations();
 	}
 	
 	public TestPlayer(float x, float y, float width, float height){
 		super(x, y, width, height);
+		setupAnimations();
+	}
+	
+	public void setupAnimations(){
+		SpriteAnimation anim;
+		anim = new SpriteAnimation(getX(), getY(), this);
+		anim.loadSpriteSheet("runningcatscaled.png", 4, 2, SpriteAnimation.LEFT_DOWN);
+		anim.setFrameDelay(5);
+		anim.setLooping(true);
+		addAnimation(anim);
+		
+		anim = new SpriteAnimation(getX(), getY(), this);
+		anim.loadSpriteSheet("runningcatscaledleft.png", 4, 2, SpriteAnimation.RIGHT_DOWN);
+		anim.setFrameDelay(5);
+		anim.setLooping(true);
+		addAnimation(anim);
 	}
 	
 	public void update(GameContainer gc, int i){
@@ -66,9 +85,11 @@ public class TestPlayer extends Pawn {
 			
 			if(left && !(up || down)){
 				moveAtAngle(180);
+				runAnimation(1);
 			}
 			if(right && !(up || down)){
 				moveAtAngle(0);
+				runAnimation(0);
 			}
 			if(up && !(left || right)){
 				moveAtAngle(90);
@@ -92,6 +113,7 @@ public class TestPlayer extends Pawn {
 			
 			if(!(left || right || up || down)){
 				stopMovement();
+				stopAnimation();
 				//Game.getGameCamera().steadyCamera();
 			}
 			

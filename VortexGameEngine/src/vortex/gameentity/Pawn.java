@@ -1,5 +1,7 @@
 package vortex.gameentity;
 
+import java.util.ArrayList;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -9,6 +11,7 @@ import org.newdawn.slick.geom.*;
 
 import vortex.Game;
 import vortex.GameEntity;
+import vortex.animation.SpriteAnimation;
 import vortex.collision.*;
 import vortex.utilities.ResourceLoader;
 
@@ -26,6 +29,9 @@ public class Pawn extends GameEntity{
 	protected Shape shape;
 	protected Image img;
 	protected boolean useImage;
+	protected ArrayList<SpriteAnimation> animations;
+	protected boolean runAnimation = false;
+	protected int animationToRun = -1;
 	/**
 	 * Modifier to draw outline or fill shape.
 	 */
@@ -38,6 +44,7 @@ public class Pawn extends GameEntity{
 		super();
 		renderFilled = true;
 		useImage = false;
+		animations = new ArrayList<SpriteAnimation>();
 	}
 	
 	/**
@@ -50,6 +57,8 @@ public class Pawn extends GameEntity{
 	public Pawn(Point startPoint, float width, float height){
 		super(startPoint, width, height);
 		renderFilled = true;
+		useImage = false;
+		animations = new ArrayList<SpriteAnimation>();
 	}
 	
 	/**
@@ -63,6 +72,26 @@ public class Pawn extends GameEntity{
 	public Pawn(float x, float y, float width , float height){
 		super(x, y, width, height);
 		renderFilled = true;
+		animations = new ArrayList<SpriteAnimation>();
+	}
+	
+	public void addAnimation(SpriteAnimation animation){
+		animations.add(animation);
+	}
+	
+	public void runAnimation(int index){
+		if(index >= 0 && index < animations.size()){
+			animationToRun = index;
+			animations.get(animationToRun).playAnimation();
+			runAnimation = true;
+		}
+	}
+	
+	public void stopAnimation(){
+		if(animationToRun >= 0 && animationToRun < animations.size()){
+			animations.get(animationToRun).stopAnimation();
+			runAnimation = false;
+		}
 	}
 	
 	@Override
@@ -71,6 +100,13 @@ public class Pawn extends GameEntity{
 	}
 	
 	public void update(GameContainer gc, int i){
+		if(animations != null){
+			int animationCount = animations.size();
+			for(int j = 0; j < animationCount; j++){
+				animations.get(j).update(gc, animationCount);
+			}
+		}
+		
 		super.update(gc, i);
 	}
 
@@ -78,7 +114,7 @@ public class Pawn extends GameEntity{
 	public void render(GameContainer gc, Graphics g) {
 		g.setColor(Color.red);
 		if(shape != null){
-			if(!useImage){
+			if(!useImage && !runAnimation){
 				if(renderFilled)
 					g.fill(shape);
 				else
@@ -87,8 +123,11 @@ public class Pawn extends GameEntity{
 				g.setColor(Color.black);
 				g.draw(shape);
 			}
-			else if(useImage){
+			else if(useImage && !runAnimation){
 				g.drawImage(img, getX(), getY());
+			}
+			else if(runAnimation){
+				animations.get(animationToRun).drawAnimation(gc, g);
 			}
 		}
 		super.render(gc, g);
