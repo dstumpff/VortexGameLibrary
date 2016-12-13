@@ -138,9 +138,8 @@ public abstract class GameEntity{
 		else if(getY() > Game.getGameCamera().getGlobalY() + halfViewportY){
 			visible = false;
 		}
-		
+			
 		intersectingObjects.clear();
-		
 		if(collisionBox != null){
 			for(int j = 0; j < collisionBox.size(); j++){
 				collisionBox.get(j).setCollisionCheckedThisFrame(false);
@@ -157,7 +156,6 @@ public abstract class GameEntity{
 				checkCollisions(collisionBox.get(j), returnObjects);
 			}
 		}
-		
 		
 		setX(getX() + vX);
 		setY(getY() + vY);
@@ -180,7 +178,6 @@ public abstract class GameEntity{
 				g.drawRect(collisionBox.get(i).getX(), collisionBox.get(i).getY(), collisionBox.get(i).getWidth(), collisionBox.get(i).getHeight());
 			}
 		}
-		
 	}
 	
 	/**
@@ -217,36 +214,30 @@ public abstract class GameEntity{
 		
 		if(wallHit == 0){
 			if(box.getMovable()){
-				System.out.println("Here 3");
-				setY(other.getY() - getHeight() + other.getVY());
-				vY = other.getVY();
+				System.out.println("Here 1");
+				setX(other.getX() - getWidth() - 1);
+				vX = 0;
 			}
 		}
 		else if(wallHit == 1){
 			if(box.getMovable()){
-				setX(other.getX() - getWidth() + other.getVX());
-				vX = other.getVX();
-			}
-			else if(other.getMovable()){
 				System.out.println("Here 2");
-				other.getLinkedEntity().setX(getX() + getWidth() + getVX());
+				setX(other.getX() + other.getWidth() + 1);
+				vX = 0;
 			}
 		}
 		else if(wallHit == 2){
 			if(box.getMovable()){
-				setX(other.getX() + other.getWidth() + other.getVX());
-				vX = other.getVX();
-			}
-			else if(other.getMovable()){
-				System.out.println("Here 1");
-				other.getLinkedEntity().setX(getX() - other.getWidth() + getVX());
+				System.out.println("Here 3");
+				setY(other.getY() - getHeight() - 1);
+				vY = 0;
 			}
 		}
 		else if(wallHit == 3){
-			
 			if(box.getMovable()){
-				setY(other.getY() + other.getHeight() + other.getVY());
-				vY = other.getVY();
+				System.out.println("Here 3");
+				setY(other.getY() + other.getHeight() + 1);
+				vY = 0;
 			}
 		}
 	}

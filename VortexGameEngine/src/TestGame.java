@@ -113,8 +113,6 @@ public class TestGame extends GameDriver{
 		player1.setShape("Rectangle");
 		player1.setMovableCollision(true);
 		player1.setViewCollision(false);
-		player1.setImage("catstatic.png");
-		player1.useImage();
 		pawnCamera = new Camera(player1, 100, 50);
 		player1.attachCamera(pawnCamera);
 		

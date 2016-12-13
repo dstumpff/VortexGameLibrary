@@ -71,6 +71,9 @@ public class Camera extends GameEntity{
 		globalY = Math.round((entity.getY() + localY + (entity.getHeight() / 2)));
 		magnification = 1.0f;
 		this.entity = entity;
+		if(entity != null){
+			entity.attachCamera(this);
+		}
 	}
 	
 	/**
@@ -89,6 +92,9 @@ public class Camera extends GameEntity{
 		globalY = Math.round((entity.getY() + localY + (entity.getHeight() / 2)));
 		magnification = 1.0f;
 		this.entity = entity;
+		if(entity != null){
+			entity.attachCamera(this);
+		}
 	}
 	
 	/**
@@ -108,6 +114,9 @@ public class Camera extends GameEntity{
 		globalY = Math.round((entity.getY() + localY + (entity.getHeight() / 2)));
 		this.magnification = magnification;
 		this.entity = entity;
+		if(entity != null){
+			entity.attachCamera(this);
+		}
 	}
 	
 	@Override
@@ -288,15 +297,6 @@ public class Camera extends GameEntity{
 	 */
 	public Point getViewportSize(){
 		return viewport;
-	}
-	
-	/**
-	 * Get the Entity that this Camera's location is based off.
-	 * 
-	 * @return The Entity
-	 */
-	public GameEntity getEntity(){
-		return entity;
 	}
 	
 	/**

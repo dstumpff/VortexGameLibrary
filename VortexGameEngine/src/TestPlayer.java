@@ -30,7 +30,7 @@ public class TestPlayer extends Pawn {
 	}
 	
 	public void setupAnimations(){
-		SpriteAnimation anim;
+		/*SpriteAnimation anim;
 		anim = new SpriteAnimation(getX(), getY(), this);
 		anim.loadSpriteSheet("runningcatscaled.png", 4, 2, SpriteAnimation.LEFT_DOWN);
 		anim.setFrameDelay(5);
@@ -41,7 +41,7 @@ public class TestPlayer extends Pawn {
 		anim.loadSpriteSheet("runningcatscaledleft.png", 4, 2, SpriteAnimation.RIGHT_DOWN);
 		anim.setFrameDelay(5);
 		anim.setLooping(true);
-		addAnimation(anim);
+		addAnimation(anim);*/
 	}
 	
 	public void update(GameContainer gc, int i){

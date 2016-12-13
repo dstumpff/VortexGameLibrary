@@ -119,9 +119,6 @@ public class Pawn extends GameEntity{
 					g.fill(shape);
 				else
 					g.draw(shape);
-				
-				g.setColor(Color.black);
-				g.draw(shape);
 			}
 			else if(useImage && !runAnimation){
 				g.drawImage(img, getX(), getY());

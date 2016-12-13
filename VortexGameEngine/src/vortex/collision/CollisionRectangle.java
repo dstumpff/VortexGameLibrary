@@ -81,36 +81,29 @@ public class CollisionRectangle extends CollisionShape{
 		//the actually rectangle will never move into the colliding rectangle.
 		//This gives a nice smooth collision.
 		
-		if(a.x + a.width + a.vX >= b.x + b.vX && a.x + a.vX <= b.x + b.vX){
-			if(a.y + a.height + a.vY >= b.y + b.vY && a.y <= b.y + b.height && a.x + a.width > b.x){
-				return 0; //Top-Left corner
+		if( (a.x + a.width)  + a.vX >= b.x){
+			if(a.x + a.width < b.x){
+				return 0; //Hit left side
 			}
-			if(a.y + a.vY <= b.y + b.height + b.vY && a.x + a.width > b.x){
-				return 3; //Bottom-Left corner
-			}
-			return 1; //Left
 		}
 		
-		if(a.x + a.vX <= b.x + b.width + b.vX && a.x + a.width + a.vX >= b.x + b.width + b.vX){
-			if(a.y + a.height + a.vY >= b.y + b.vY && a.y + a.vY < b.y + b.height - b.vY && a.x < b.x + b.width){
-				return 0; //Top-Right corner
+		if(a.x + a.vX <= b.x + b.width){
+			if(a.x > b.x + b.width){
+				return 1; // Hit right side
 			}
-			if(a.y <= b.y + b.height && a.x < b.x + b.width){
-				return 3; //Bottom-Right corner
-			}
-			return 2; //Right
 		}
 		
-		
-		/*if(a.y + a.height + vY > b.y){
-			return 0;
+		if( (a.y + a.height) + a.vY >= b.y){
+			if(a.y + a.height < b.y){
+				return 2; //Hit top side
+			}
 		}
 		
-		if(a.y + vY < b.y + b.height){
-			return 3;
-		}*/
-		
-		//Need to find a way to check which side is hit.
+		if(a.y + a.vY <= b.y + b.height){
+			if(a.y > b.y + b.height){
+				return 3; //Hit bottom side
+			}
+		}
 		
 		return -1;
 	}
@@ -122,54 +115,12 @@ public class CollisionRectangle extends CollisionShape{
 		   this.y + vY <= other.y + other.height + other.vY &&
 		   this.height + this.y + vY >= other.y + other.vY) {
 			
-		    //System.out.println("Collided");
 		    int wall = checkSide(this, other);
-		   // System.out.println(wall);
 		    return wall;
 		}
 		
-		//System.out.println("NOT COLLIDED " + this.x + " " + this.y + " " + other.x + " " + other.y);
 		return -1;
 		
-		/*for(int i = 0; i < collisionLines.length; i++){
-			for(int j = 0; j < other.collisionLines.length; j++){
-				if(collisionLines[i].collisionLine.intersects(other.collisionLines[j].collisionLine)){
-					if(j == 0){
-						if(y < other.y && y + height > other.y && x + width - Math.abs(vX) - Math.abs(other.vX) <= other.x){
-							return 1;
-						}
-						if(y < other.y && y + height > other.y && x + Math.abs(vX) + Math.abs(other.vX) >= other.x + other.width){
-							return 2;
-						}
-						if(y + height == other.y && x + width == other.x || y + height == other.y && x == other.x + other.width){
-							return -1;
-						}
-					}
-					if(j == 1){
-						if(x <= other.x && x + width > other.x && y + Math.abs(vY) + Math.abs(other.vY) >= other.y + other.height){
-							return 3;
-						}
-						
-						if(y == other.y + other.height && x + width == other.x){
-							return -1;
-						}
-					}
-					if(j == 2){
-						if(x < other.x + other.width && x + width >= other.x + other.width && y + Math.abs(vY) + Math.abs(other.vY) >= other.y + other.height){
-							return 3;
-						}
-						if(x == other.x + other.width && y == other.y + other.height){
-							return -1;
-						}
-						
-					}
-					
-					return j;
-				}
-			}
-		}
-		
-		return -1;*/
 	}
 
 }
