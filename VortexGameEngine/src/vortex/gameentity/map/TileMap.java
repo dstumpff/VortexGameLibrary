@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.SpriteSheet;
+import org.newdawn.slick.tiled.TileSet;
 import org.newdawn.slick.tiled.TiledMap;
 
 import vortex.Game;
@@ -54,11 +56,13 @@ public abstract class TileMap extends Map{
 		this.setY(y);
 		this.setWidth(theTileMap.getWidth() * theTileMap.getTileWidth());
 		this.setHeight(theTileMap.getHeight() * theTileMap.getTileHeight());
+		TileSet theTileSet = theTileMap.getTileSet(0);
+		SpriteSheet sheet = theTileSet.tiles;
 	}
 	
 	public void update(GameContainer gc, int i){
-		setX(getX() + vX);
-		setY(getY() + vY);
+		setX(getX() + movementVector.getX());
+		setY(getY() + movementVector.getY());
 		
 		if(getCamera() != null){
 			getCamera().update(gc, i);
@@ -79,110 +83,6 @@ public abstract class TileMap extends Map{
 	
 	public void render(GameContainer gc, Graphics g){
 		super.render(gc, g);
-	}
-	
-	/**
-	 * Takes a 2D array to assign pathing to the map.
-	 * 
-	 * @param pathingMap The matrix to use for pathing
-	 */
-	public void setPathing(boolean[][] pathingMap){
-		for(int i = 0; i < pathingMap.length; i++){
-			for(int j = 0; j < pathingMap[i].length; j++){
-				if(pathingMap[i][j]){
-					collisionBox.add(new CollisionRectangle(theTileMap.getTileWidth() * j, theTileMap.getTileHeight() * i, theTileMap.getTileWidth(), theTileMap.getTileHeight()));
-					Game.collisionShapes.add(collisionBox.get(collisionBox.size() - 1));
-				}
-			}
-		}
-		
-		optimizePathing();
-	}
-	
-	/**
-	 * Optimizes the number of collision objects used for pathing. It assures correct pathing but will merge collision objects to decrease number of collision checks.
-	 */
-	protected void optimizePathing(){
-		ArrayList<ArrayList<CollisionShape>> optimizableRects = new ArrayList<ArrayList<CollisionShape>>();
-		
-		//Optimize Horizontally
-		for(int i = 0; i < collisionBox.size(); i++){
-		    int curRectIndex = i;
-			optimizableRects.add(new ArrayList<CollisionShape>());
-			for(int j = i + 1; j < collisionBox.size(); j++){
-				if(collisionBox.get(i).getX() + collisionBox.get(i).getWidth() == collisionBox.get(j).getX()
-				&& collisionBox.get(i).getY()  == collisionBox.get(j).getY()){
-					optimizableRects.get(optimizableRects.size() - 1).add(collisionBox.get(j));
-					i = j;
-				}
-			}
-		
-			optimizableRects.get(optimizableRects.size() - 1).add(collisionBox.get(curRectIndex));
-		}
-		
-		for(int i = 0; i < optimizableRects.size(); i++){
-			Game.collisionShapes.removeAll(collisionBox);
-			
-			float newX = optimizableRects.get(i).get(optimizableRects.get(i).size() - 1).getX();
-			float newY = optimizableRects.get(i).get(optimizableRects.get(i).size() - 1).getY();
-			float newWidth = optimizableRects.get(i).get(optimizableRects.get(i).size() - 1).getWidth();
-			float newHeight = optimizableRects.get(i).get(optimizableRects.get(i).size() - 1).getHeight();
-			
-			for(int j = 0; j < optimizableRects.get(i).size() - 1; j++){
-				newWidth += optimizableRects.get(i).get(j).getWidth();
-			}
-			
-			collisionBox.removeAll(optimizableRects.get(i));
-			collisionBox.add(new CollisionRectangle(newX, newY, newWidth, newHeight));
-			
-			Game.collisionShapes.addAll(collisionBox);
-			
-			optimizableRects.get(i).clear();
-		}
-		
-		optimizableRects.clear();
-		
-		//Optimize Vertically
-		boolean foundOptimizableRect = true;
-		while(foundOptimizableRect){
-			foundOptimizableRect = false;
-			for(int i = 0; i < collisionBox.size(); i++){
-			    int curRectIndex = i;
-				optimizableRects.add(new ArrayList<CollisionShape>());
-				for(int j = i + 1; j < collisionBox.size(); j++){
-					if(collisionBox.get(i).getX() == collisionBox.get(j).getX()
-					&& collisionBox.get(i).getY() + collisionBox.get(i).getHeight() == collisionBox.get(j).getY()
-					&& collisionBox.get(i).getWidth() == collisionBox.get(j).getWidth()){
-						optimizableRects.get(optimizableRects.size() - 1).add(collisionBox.get(j));
-						i = j;
-						foundOptimizableRect = true;
-					}
-				}
-				
-				optimizableRects.get(optimizableRects.size() - 1).add(collisionBox.get(curRectIndex));
-			}
-		
-		
-			for(int i = 0; i < optimizableRects.size(); i++){
-				Game.collisionShapes.removeAll(collisionBox);
-				
-				float newX = optimizableRects.get(i).get(optimizableRects.get(i).size() - 1).getX();
-				float newY = optimizableRects.get(i).get(optimizableRects.get(i).size() - 1).getY();
-				float newWidth = optimizableRects.get(i).get(optimizableRects.get(i).size() - 1).getWidth();
-				float newHeight = optimizableRects.get(i).get(optimizableRects.get(i).size() - 1).getHeight();
-				
-				for(int j = 0; j < optimizableRects.get(i).size() - 1; j++){
-					newHeight += optimizableRects.get(i).get(j).getHeight();
-				}
-				
-				collisionBox.removeAll(optimizableRects.get(i));
-				collisionBox.add(new CollisionRectangle(newX, newY, newWidth, newHeight));
-				
-				Game.collisionShapes.addAll(collisionBox);
-			}
-			
-			optimizableRects.clear();
-		}
 	}
 	
 	/**

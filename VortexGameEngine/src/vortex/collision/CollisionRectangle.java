@@ -1,126 +1,81 @@
 package vortex.collision;
 
-import org.newdawn.slick.geom.Rectangle;
-
 import vortex.GameEntity;
+import vortex.geom.Point;
+import vortex.geom.Vector;
 
-/**
- * Implementation of CollisionShape for a Rectangular shape.
- * 
- * @author Daniel Stumpff
- *
- */
-public class CollisionRectangle extends CollisionShape{
+public class CollisionRectangle extends CollisionShapeConvex{
 	
-	/**
-	 * Constructor with parameters.
-	 * 
-	 * @param x The x position
-	 * @param y The y position
-	 * @param width The width
-	 * @param height The height
-	 */
 	public CollisionRectangle(float x, float y, float width, float height){
-		super(x, y, width, height);
+		points = new Point[4];
+		points[0] = new Point(x, y);
+		points[1] = new Point(x + width, y);
+		points[2] = new Point(x + width, y + height);
+		points[3] = new Point(x, y + height);
+		axes = new Vector[2];
+		calculateAxes();
 	}
 	
-	/**
-	 * Constructor with parameters.
-	 * 
-	 * @param x The x position
-	 * @param y The y position
-	 */
-	public CollisionRectangle(float x, float y) {
-		super(x, y);
-	}
-	
-	/**
-	 * Constructor with parameters.
-	 * 
-	 * @param rect - The rectangle to base this shape off
-	 */
-	public CollisionRectangle(Rectangle rect){
-		super(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
-	}
-	
-	/**
-	 * Constructor with parameters.
-	 * 
-	 * @param linkedEntity The entity to link
-	 * @param x The x position
-	 * @param y The y position
-	 * @param width The width
-	 * @param height The height
-	 */
-	public CollisionRectangle(GameEntity linkedEntity, float x, float y, float width, float height){
-		super(linkedEntity, x, y, width, height);
-	}
-	
-	/**
-	 * Constructor with parameters.
-	 * 
-	 * @param linkedEntity - The entity to link
-	 * @param x The x position
-	 * @param y The y position
-	 */
-	public CollisionRectangle(GameEntity linkedEntity, float x, float y){
-		super(linkedEntity, x, y);
-	}
-	
-	protected void initCollisionLines(){
-		//Do nothing
-	}
-	
-	public void updateCollisionLines(){
-		//Do nothing
-	}
-	
-	public int checkSide(CollisionRectangle a, CollisionRectangle b){
+	protected void calculateAxes(){
+		Vector edge1 = new Vector(getWidth(), 0);
+		Vector normal1 = edge1.getNormal1();
+		Vector edge2 = new Vector(0, getHeight());
+		Vector normal2 = edge2.getNormal1();
 		
-		//Checks if position + movement will move into rectangle. This means that 
-		//the actually rectangle will never move into the colliding rectangle.
-		//This gives a nice smooth collision.
+		normal1 = normal1.normalize();
+		normal2 = normal2.normalize();
 		
-		if( (a.x + a.width)  + a.vX >= b.x){
-			if(a.x + a.width < b.x){
-				return 0; //Hit left side
-			}
-		}
+		axes[0] = normal1;
+		axes[1] = normal2;
+
+	}
+	
+	public void syncCollision(GameEntity entity){
+		float entityX = entity.getX();
+		float entityY = entity.getY();
+		float width = entity.getWidth();
+		float height = entity.getHeight();
+		points[0].setX(entityX);
+		points[0].setY(entityY);
 		
-		if(a.x + a.vX <= b.x + b.width){
-			if(a.x > b.x + b.width){
-				return 1; // Hit right side
-			}
-		}
+		points[1].setX(points[0].getX() + width);
+		points[1].setY(points[0].getY());
 		
-		if( (a.y + a.height) + a.vY >= b.y){
-			if(a.y + a.height < b.y){
-				return 2; //Hit top side
-			}
-		}
+		points[2].setX(points[0].getX() + width);
+		points[2].setY(points[0].getY() + height);
 		
-		if(a.y + a.vY <= b.y + b.height){
-			if(a.y > b.y + b.height){
-				return 3; //Hit bottom side
-			}
-		}
-		
-		return -1;
+		points[3].setX(points[0].getX());
+		points[3].setY(points[0].getY() + height);
 	}
 	
 	@Override
-	public int intersectsRect(CollisionRectangle other) {
-		if (this.x + vX <= other.x + other.width + other.vX &&
-		   this.x + this.width + vX >= other.x + other.vX &&
-		   this.y + vY <= other.y + other.height + other.vY &&
-		   this.height + this.y + vY >= other.y + other.vY) {
-			
-		    int wall = checkSide(this, other);
-		    return wall;
-		}
-		
-		return -1;
-		
+	public float getX() {
+		return points[0].getX();
+	}
+
+	@Override
+	public float getY() {
+		return points[0].getY();
+	}
+	
+	@Override
+	public float getCenterX() {
+		return (points[0].getX() + (getWidth() / 2));
+	}
+
+	@Override
+	public float getCenterY() {
+		return (points[0].getY() + (getHeight() / 2));
+	}
+
+	@Override
+	public float getWidth() {
+		return (points[1].getX() - points[0].getX());
+	}
+
+	@Override
+	public float getHeight() {
+		return (points[2].getY() - points[1].getY());
 	}
 
 }

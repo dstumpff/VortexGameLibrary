@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.newdawn.slick.geom.Rectangle;
 
-import vortex.collision.CollisionShape;
+import vortex.collision.CollisionShape;;
 
 /**
  * A data structure much like a binary tree except it splits into 4 rather than 2. This data structure is particularly useful

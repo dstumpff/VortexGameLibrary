@@ -13,6 +13,7 @@ import vortex.sound.SoundEffect;
 public class TestPlayer extends Pawn {
 	
 	boolean left, right, up, down;
+	float movementMagnitude = 5;
 	
 	public TestPlayer(){
 		super();
@@ -84,31 +85,31 @@ public class TestPlayer extends Pawn {
 			}
 			
 			if(left && !(up || down)){
-				moveAtAngle(180);
+				setMovement(movementMagnitude, 180);
 				runAnimation(1);
 			}
 			if(right && !(up || down)){
-				moveAtAngle(0);
+				setMovement(movementMagnitude, 0);
 				runAnimation(0);
 			}
 			if(up && !(left || right)){
-				moveAtAngle(90);
+				setMovement(movementMagnitude, 90);
 				//Game.getGameCamera().shakeCamera(50, 0, 5);
 			}
 			if(down && !(left || right)){
-				moveAtAngle(270);
+				setMovement(movementMagnitude, 270);
 			}
 			if(left && up){
-				moveAtAngle(135);
+				setMovement(movementMagnitude, 135);
 			}
 			else if(left && down){
-				moveAtAngle(225);
+				setMovement(movementMagnitude, 225);
 			}
 			else if(right && up){
-				moveAtAngle(45);
+				setMovement(movementMagnitude, 45);
 			}
 			else if(right && down){
-				moveAtAngle(315);
+				setMovement(movementMagnitude, 315);
 			}
 			
 			if(!(left || right || up || down)){

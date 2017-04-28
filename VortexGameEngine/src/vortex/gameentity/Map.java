@@ -15,8 +15,8 @@ public abstract class Map extends GameEntity{
 	}
 	
 	public void update(GameContainer gc, int i){
-		setX(getX() + vX);
-		setY(getY() + vY);
+		setX(getX() + movementVector.getX());
+		setY(getY() + movementVector.getY());
 		
 		if(getCamera() != null){
 			getCamera().update(gc, i);

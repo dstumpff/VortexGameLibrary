@@ -155,7 +155,7 @@ public class Pawn extends GameEntity{
 	public void setShape(String shapeID){
 		if(shapeID.equals("Rectangle")){
 			shape = new Rectangle(startPoint.getX(), startPoint.getY(), width, height);
-			collisionBox.add(new CollisionRectangle(this, startPoint.getX(), startPoint.getY(), width, height));
+			collisionBox.add(new CollisionRectangle(startPoint.getX(), startPoint.getY(), width, height));
 			Game.collisionShapes.add(collisionBox.get(0));
 		}
 		else if(shapeID.equals("Ellipse")){

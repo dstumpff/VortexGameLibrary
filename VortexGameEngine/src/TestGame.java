@@ -94,13 +94,15 @@ public class TestGame extends GameDriver{
 		
 		try {
 			ResourceLoader.createTextbox("test");
-		} catch (TextboxException e1) {
+		} catch (TextboxException e) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			e.printStackTrace();
 		}
 		try{
 			theTileMap = new BasicTileMap("res/testMap.tmx");
-			//((BasicTileMap)(theTileMap)).setPathing(tileMapPathing);
+			int[] collisionTiles = {12};
+			((BasicTileMap)(theTileMap)).assignCollisionTiles(collisionTiles);
+			((BasicTileMap)(theTileMap)).setPathing();
 			theTileMap.useDefaultCamera();
 			System.out.println("LEFT: " + theTileMap.getLeftBound() + " RIGHT: " + theTileMap.getRightBound() + " UPPER: " + theTileMap.getUpperBound() + " LOWER: " + theTileMap.getLowerBound());
 			theTileMap.setViewCollision(true);
@@ -109,16 +111,15 @@ public class TestGame extends GameDriver{
 			e.printStackTrace();
 		}
 		player1 = new TestPlayer(100,200,50,50);
-		player1.setSpeed(5f);
 		player1.setShape("Rectangle");
-		player1.setMovableCollision(true);
+		player1.setRigid(false);
 		player1.setViewCollision(false);
 		pawnCamera = new Camera(player1, 100, 50);
 		player1.attachCamera(pawnCamera);
 		
 		player2 = new Pawn(300, 400, 50, 50);
 		player2.setShape("Rectangle");
-		player2.setMovableCollision(false);
+		player2.setRigid(true);
 		player2.useDefaultCamera();
 		
 		//player3 = new Player(350, 600, 100, 100);
@@ -225,19 +226,18 @@ public class TestGame extends GameDriver{
 		MouseInput.addMouseInputCommand("Attack", Input.MOUSE_LEFT_BUTTON, 0);
 		
 		//BackgroundMusic.addSongToQueue("01.-title.mp3");
-		BackgroundMusic.addSongToQueue("08.-bonus-level.mp3");
+		/*BackgroundMusic.addSongToQueue("08.-bonus-level.mp3");
 		
 		try{
 			BackgroundMusic.playAllInQueue();
 		}catch(JavaLayerException e){
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 	@Override
 	public void update(GameContainer gc, int i) {
-		
-		//player2.setVX(2f);
+		//player2.setMovement(2, 0);
 		for(int j = 0; j < gameEntities.size(); j++){
 			gameEntities.get(j).update(gc, i);
 		}

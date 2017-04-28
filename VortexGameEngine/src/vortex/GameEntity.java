@@ -9,7 +9,9 @@ import org.newdawn.slick.geom.Point;
 
 import vortex.collision.CollisionRectangle;
 import vortex.collision.CollisionShape;
+import vortex.collision.CollisionShapeConvex;
 import vortex.gameentity.*;
+import vortex.geom.Vector;
 import vortex.Game;
 
 /**
@@ -43,11 +45,7 @@ public abstract class GameEntity{
 	/**
 	 * Movement modifier for the entity.
 	 */
-	protected float vX, vY;
-	/**
-	 * The combined speed of vX and vY.
-	 */
-	protected float speed = 0;
+	protected Vector movementVector;
 	/**
 	 * The list of collision bounds for the entity.
 	 */
@@ -72,7 +70,7 @@ public abstract class GameEntity{
 		startPoint = new Point(Game.getScreenWidth() / 2, Game.getScreenHeight() / 2);
 		width = 0;
 		height = 0;
-		vX = vY = 0;
+		movementVector = new Vector(0,0);
 		collisionBox = new ArrayList<CollisionShape>();
 	}
 	
@@ -87,7 +85,7 @@ public abstract class GameEntity{
 		this.startPoint = startPoint;
 		this.width = width;
 		this.height = height;
-		vX = vY = 0;
+		movementVector = new Vector(0,0);
 		collisionBox = new ArrayList<CollisionShape>();
 	}
 	
@@ -103,7 +101,7 @@ public abstract class GameEntity{
 		startPoint = new Point(x, y);
 		this.width = width;
 		this.height = height;
-		vX = vY = 0;
+		movementVector = new Vector(0,0);
 		collisionBox = new ArrayList<CollisionShape>();
 	}
 	
@@ -122,6 +120,7 @@ public abstract class GameEntity{
 	 */
 	public void update(GameContainer gc, int i){
 		visible = true;
+		boolean foundCollision = false;
 		
 		int halfViewportX = (int)Game.getGameCamera().getViewportSize().getX() >> 1;
 		int halfViewportY = (int)Game.getGameCamera().getViewportSize().getY() >> 1;
@@ -138,31 +137,51 @@ public abstract class GameEntity{
 		else if(getY() > Game.getGameCamera().getGlobalY() + halfViewportY){
 			visible = false;
 		}
-			
+		
+		setX(getX() + movementVector.getX());
+		setY(getY() + movementVector.getY());
+		
 		intersectingObjects.clear();
 		if(collisionBox != null){
+			movementVector = new Vector(0,0);
 			for(int j = 0; j < collisionBox.size(); j++){
-				collisionBox.get(j).setCollisionCheckedThisFrame(false);
-				collisionBox.get(j).setX(startPoint.getX());
-				collisionBox.get(j).setY(startPoint.getY());
-				collisionBox.get(j).setHeight(height);
-				collisionBox.get(j).setWidth(width);
-				collisionBox.get(j).setVX(vX);
-				collisionBox.get(j).setVY(vY);
-				collisionBox.get(j).updateCollisionLines();
-				ArrayList<CollisionShape> returnObjects = new ArrayList<CollisionShape>();
-				Game.collisionQuadtree.retrieve(returnObjects, collisionBox.get(j));
+				collisionBox.get(j).syncCollision(this);
+				ArrayList<CollisionShape> potentialObjects = new ArrayList<CollisionShape>();
+				potentialObjects = Game.collisionQuadtree.retrieve(potentialObjects, collisionBox.get(j));
 				//System.out.println(this.getClass().toString() + ": " + returnObjects.size());
-				checkCollisions(collisionBox.get(j), returnObjects);
+				foundCollision = checkCollisions(collisionBox.get(j), potentialObjects);
 			}
 		}
-		
-		setX(getX() + vX);
-		setY(getY() + vY);
+		if(foundCollision){
+			setX(getX() + movementVector.getX());
+			setY(getY() + movementVector.getY());
+		}
 		
 		if(theCamera != null){
 			theCamera.update(gc, i);
 		}
+	}
+	
+	public boolean checkCollisions(CollisionShape shape, ArrayList<CollisionShape> potentialObjects){
+		boolean foundCollision = false;
+		for(int i = 0; i < potentialObjects.size(); i++){
+			if(shape instanceof CollisionShapeConvex && potentialObjects.get(i) instanceof CollisionShapeConvex){
+				CollisionShapeConvex s1 = (CollisionShapeConvex) shape;
+				CollisionShapeConvex s2 = (CollisionShapeConvex) potentialObjects.get(i);
+				Vector mtv = CollisionShapeConvex.intersectsConvex(s1, s2);
+				if(mtv.getX() != 0 || mtv.getY() != 0){
+					System.out.println("Collision Detected");
+					System.out.println("MTV Magnitude: " + mtv.getMagnitude());
+					System.out.println("MTV angle: " + Vector.angleFromOrigin(mtv));
+					if(!shape.getRigid()){
+						movementVector = Vector.add(movementVector, mtv);
+					}
+					foundCollision = true;
+				}
+			}
+		}
+		
+		return foundCollision;
 	}
 	
 	/**
@@ -180,107 +199,23 @@ public abstract class GameEntity{
 		}
 	}
 	
-	/**
-	 * Checks collision for all potential collision bounds.
-	 * 
-	 * @param box One of the collision bounds for this entity
-	 * @param potentialObjects A list of potential collisions
-	 */
-	protected void checkCollisions(CollisionShape box, ArrayList<CollisionShape> potentialObjects){
-		for(int i = 0; i < potentialObjects.size(); i++){
-			if(potentialObjects.get(i) instanceof CollisionRectangle && potentialObjects.get(i) != box){
-				if(!potentialObjects.get(i).isCollisionCheckedThisFrame()){
-					RectToRectCollision((CollisionRectangle)box, (CollisionRectangle)potentialObjects.get(i));
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Runs the algorithm for rect to rect collision.
-	 * 
-	 * @param box The first rectangle
-	 * @param other The second rectangle 
-	 */
-	protected void RectToRectCollision(CollisionRectangle box, CollisionRectangle other){
-		int wallHit = box.intersectsRect(other);
-		
-		box.setCollisionCheckedThisFrame(true);
-		other.setCollisionCheckedThisFrame(true);
-		
-		if(wallHit != -1){
-			intersectingObjects.add(other);
-		}
-		
-		if(wallHit == 0){
-			if(box.getMovable()){
-				System.out.println("Here 1");
-				setX(other.getX() - getWidth() - 1);
-				vX = 0;
-			}
-		}
-		else if(wallHit == 1){
-			if(box.getMovable()){
-				System.out.println("Here 2");
-				setX(other.getX() + other.getWidth() + 1);
-				vX = 0;
-			}
-		}
-		else if(wallHit == 2){
-			if(box.getMovable()){
-				System.out.println("Here 3");
-				setY(other.getY() - getHeight() - 1);
-				vY = 0;
-			}
-		}
-		else if(wallHit == 3){
-			if(box.getMovable()){
-				System.out.println("Here 3");
-				setY(other.getY() + other.getHeight() + 1);
-				vY = 0;
-			}
-		}
-	}
-	
-	public void moveAtAngle(float angle){
-		setVX((float)Math.cos(Math.toRadians(angle)) * speed);
-		setVY(-(float)Math.sin(Math.toRadians(angle)) * speed);
+	public void setMovement(float magnitude, float angle){
+		this.movementVector = Vector.createVectorWithAngle(magnitude, angle);
 	}
 	
 	public void stopMovement(){
-		vX = 0;
-		vY = 0;
+		this.movementVector = Vector.multiply(movementVector, 0);
 	}
 	
-	/**
-	 * Set the amount to move in the x-axis each frame (default = 0).
-	 * 
-	 * @param vX The value to move
-	 */
-	public void setVX(float vX){
-		this.vX = vX;
-	}
-	
-	/**
-	 * Set the amount to move in the y-axis each frame (default = 0).
-	 * @param vY The value to move
-	 */
-	public void setVY(float vY){
-		this.vY = vY;
-	}
-	
-	public void setSpeed(float speed){
-		this.speed = speed;
-	}
 	
 	/**
 	 * Sets if this entity should move when it collides with another.
 	 * 
 	 * @param movable Whether it should move or not
 	 */
-	public void setMovableCollision(boolean movable){
+	public void setRigid(boolean rigid){
 		for(int i = 0; i < collisionBox.size(); i++){
-			collisionBox.get(i).setMovable(movable);
+			collisionBox.get(i).setRigid(rigid);
 		}
 	}
 	
@@ -366,20 +301,8 @@ public abstract class GameEntity{
 		return startPoint.getY();
 	}
 	
-	/**
-	 * Get the vX of the GameEntity.
-	 * @return The vX
-	 */
-	public float getVX(){
-		return vX;
-	}
-	
-	/**
-	 * Get the vY of the GameEntity.
-	 * @return The vY
-	 */
-	public float getVY(){
-		return vY;
+	public Vector getMovementVector(){
+		return movementVector;
 	}
 	
 	/**
@@ -387,15 +310,7 @@ public abstract class GameEntity{
 	 * @return The total current speed
 	 */
 	public float getCurSpeed(){
-		return (float)Math.sqrt((vX * vX) + (vY * vY));
-	}
-	
-	/**
-	 * Get the total set speed of this GameEntity.
-	 * @return The set speed
-	 */
-	public float getSpeed(){
-		return speed;
+		return this.movementVector.getMagnitude();
 	}
 	
 	/**

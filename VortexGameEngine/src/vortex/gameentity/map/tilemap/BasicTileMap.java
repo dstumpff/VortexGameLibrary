@@ -7,6 +7,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
 import vortex.Game;
+import vortex.collision.CollisionRectangle;
 import vortex.collision.CollisionShape;
 import vortex.gameentity.map.TileMap;
 
@@ -20,6 +21,8 @@ import vortex.gameentity.map.TileMap;
  * @author Daniel Stumpff
  */
 public class BasicTileMap extends TileMap{
+	
+	protected int[] collisionTileIds;
 	
 	/**
 	 * The constructor. Takes the path for the .tmx and the x and y coordinates.
@@ -43,14 +46,11 @@ public class BasicTileMap extends TileMap{
 		
 		if(collisionBox != null){
 			for(int j = 0; j < collisionBox.size(); j++){
-				//collisionBox.get(j).setX(startPoint.getX());
-				//collisionBox.get(j).setY(startPoint.getY());
-				collisionBox.get(j).setVX(vX);
-				collisionBox.get(j).setVY(vY);
-				collisionBox.get(j).updateCollisionLines();
-				ArrayList<CollisionShape> returnObjects = new ArrayList<CollisionShape>();
-				Game.collisionQuadtree.retrieve(returnObjects, collisionBox.get(j));
-				checkCollisions(collisionBox.get(j), returnObjects);
+				//collisionBox.get(j).syncCollision(this);
+				ArrayList<CollisionShape> potentialObjects = new ArrayList<CollisionShape>();
+				potentialObjects = Game.collisionQuadtree.retrieve(potentialObjects, collisionBox.get(j));
+				//System.out.println(this.getClass().toString() + ": " + returnObjects.size());
+				//checkCollisions(collisionBox.get(j), potentialObjects);
 			}
 		}
 		
@@ -64,5 +64,32 @@ public class BasicTileMap extends TileMap{
 		}
 		
 		super.render(gc, g);
+	}
+	
+	/**
+	 * Takes a 2D array to assign pathing to the map.
+	 * 
+	 * @param pathingMap The matrix to use for pathing
+	 */
+	public void setPathing(){
+		int r = theTileMap.getHeight();
+		int c = theTileMap.getWidth();
+		for(int i = 0; i < r; i++){
+			for(int j = 0; j < c; j++){
+				for(int k = 0; k < collisionTileIds.length; k++){
+					if(theTileMap.getTileId(j, i, 0) == collisionTileIds[k]){
+						CollisionRectangle collision = new CollisionRectangle(theTileMap.getTileWidth() * j, theTileMap.getTileHeight() * i, theTileMap.getTileWidth(), theTileMap.getTileHeight());
+						collision.setRigid(true);
+						this.collisionBox.add(collision);
+						Game.collisionShapes.add(collision);
+						break;
+					}
+				}
+			}
+		}
+	}
+	
+	public void assignCollisionTiles(int[] tileIds){
+		this.collisionTileIds = tileIds;
 	}
 }
