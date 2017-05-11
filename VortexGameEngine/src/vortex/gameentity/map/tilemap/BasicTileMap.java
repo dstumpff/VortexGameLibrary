@@ -7,6 +7,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
 import vortex.Game;
+import vortex.algorithm.pathfinding.PathingNode;
 import vortex.collision.CollisionRectangle;
 import vortex.collision.CollisionShape;
 import vortex.gameentity.map.TileMap;
@@ -23,6 +24,7 @@ import vortex.gameentity.map.TileMap;
 public class BasicTileMap extends TileMap{
 	
 	protected int[] collisionTileIds;
+	protected PathingNode[][] pathingMap;
 	
 	/**
 	 * The constructor. Takes the path for the .tmx and the x and y coordinates.
@@ -34,6 +36,7 @@ public class BasicTileMap extends TileMap{
 	 */
 	public BasicTileMap(String path) throws SlickException {
 		super(path, 0, 0);
+		pathingMap = new PathingNode[theTileMap.getWidth()][theTileMap.getHeight()];
 	}
 
 	@Override
@@ -67,21 +70,22 @@ public class BasicTileMap extends TileMap{
 	}
 	
 	/**
-	 * Takes a 2D array to assign pathing to the map.
+	 * Assigns Collision to the TileMap
 	 * 
-	 * @param pathingMap The matrix to use for pathing
 	 */
-	public void setPathing(){
+	public void setCollision(){
 		int r = theTileMap.getHeight();
 		int c = theTileMap.getWidth();
 		for(int i = 0; i < r; i++){
 			for(int j = 0; j < c; j++){
+				pathingMap[i][j] = new PathingNode(true);
 				for(int k = 0; k < collisionTileIds.length; k++){
 					if(theTileMap.getTileId(j, i, 0) == collisionTileIds[k]){
 						CollisionRectangle collision = new CollisionRectangle(theTileMap.getTileWidth() * j, theTileMap.getTileHeight() * i, theTileMap.getTileWidth(), theTileMap.getTileHeight());
 						collision.setRigid(true);
 						this.collisionBox.add(collision);
 						Game.collisionShapes.add(collision);
+						pathingMap[i][j].setPathable(false);
 						break;
 					}
 				}
@@ -91,5 +95,9 @@ public class BasicTileMap extends TileMap{
 	
 	public void assignCollisionTiles(int[] tileIds){
 		this.collisionTileIds = tileIds;
+	}
+	
+	public PathingNode[][] getPathingMap(){
+		return pathingMap;
 	}
 }

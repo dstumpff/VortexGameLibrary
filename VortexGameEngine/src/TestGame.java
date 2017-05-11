@@ -99,10 +99,10 @@ public class TestGame extends GameDriver{
 			e.printStackTrace();
 		}
 		try{
-			theTileMap = new BasicTileMap("res/testMap.tmx");
+			theTileMap = new BasicTileMap("res/TestMap.tmx");
 			int[] collisionTiles = {12};
 			((BasicTileMap)(theTileMap)).assignCollisionTiles(collisionTiles);
-			((BasicTileMap)(theTileMap)).setPathing();
+			((BasicTileMap)(theTileMap)).setCollision();
 			theTileMap.useDefaultCamera();
 			System.out.println("LEFT: " + theTileMap.getLeftBound() + " RIGHT: " + theTileMap.getRightBound() + " UPPER: " + theTileMap.getUpperBound() + " LOWER: " + theTileMap.getLowerBound());
 			theTileMap.setViewCollision(true);
@@ -202,7 +202,7 @@ public class TestGame extends GameDriver{
 		});
 		realTimer.setTime(20, FPS);
 		realTimer.setRecurring(true);
-		realTimer.start();
+		//realTimer.start();
 		//realTimer.pause();
 		
 		gameEntities.add(theTileMap);
@@ -225,6 +225,8 @@ public class TestGame extends GameDriver{
 		
 		MouseInput.addMouseInputCommand("Attack", Input.MOUSE_LEFT_BUTTON, 0);
 		
+		
+		
 		//BackgroundMusic.addSongToQueue("01.-title.mp3");
 		/*BackgroundMusic.addSongToQueue("08.-bonus-level.mp3");
 		
@@ -240,6 +242,15 @@ public class TestGame extends GameDriver{
 		//player2.setMovement(2, 0);
 		for(int j = 0; j < gameEntities.size(); j++){
 			gameEntities.get(j).update(gc, i);
+		}
+		
+		if(KeyInput.get("Start Dialog").getKeyDown()){
+			for(int j = 0; j < 25; j++){
+				for(int k = 0; k < 25; k++){
+					PathFinding.runDijkstra((BasicTileMap)theTileMap, i, j);
+				}
+			}
+			//PathFinding.findPath(4, 5);
 		}
 		
 		/*if(KeyInput.get("PauseTextbox").isPressed()){

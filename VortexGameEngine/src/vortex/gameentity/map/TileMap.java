@@ -2,6 +2,7 @@ package vortex.gameentity.map;
 
 import java.util.ArrayList;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -83,6 +84,12 @@ public abstract class TileMap extends Map{
 	
 	public void render(GameContainer gc, Graphics g){
 		super.render(gc, g);
+		g.setColor(Color.white);
+		for(int i = 0; i < theTileMap.getHeight(); i++){
+			for(int j = 0; j < theTileMap.getWidth(); j++){
+				g.drawRect(theTileMap.getTileWidth() * j, theTileMap.getTileHeight() * i, theTileMap.getTileWidth(), theTileMap.getTileHeight());
+			}
+		}
 	}
 	
 	/**

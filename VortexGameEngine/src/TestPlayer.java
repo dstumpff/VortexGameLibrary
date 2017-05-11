@@ -49,11 +49,9 @@ public class TestPlayer extends Pawn {
 		if(!TestGame.dialogMode){
 			if(KeyInput.keyCommandExists("Move+X")){
 				if(KeyInput.get("Move+X").getKeyDown()){
-					System.out.println("Key Down");
 					right = true;
 				}
 				else if(KeyInput.get("Move+X").getKeyUp()){
-					System.out.println("Key Up");
 					right = false;
 				}
 			}
