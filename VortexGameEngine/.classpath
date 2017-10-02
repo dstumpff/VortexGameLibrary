@@ -7,5 +7,12 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Vortex"/>
 	<classpathentry kind="lib" path="jl1.0.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="slick.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="VortexGameLibrary/Release/natives/windows"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="Release/Jars/lwjgl_util.jar"/>
+	<classpathentry kind="lib" path="Release/Jars/lwjgl.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

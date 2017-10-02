@@ -245,11 +245,9 @@ public class TestGame extends GameDriver{
 		}
 		
 		if(KeyInput.get("Start Dialog").getKeyDown()){
-			for(int j = 0; j < 25; j++){
-				for(int k = 0; k < 25; k++){
-					PathFinding.runDijkstra((BasicTileMap)theTileMap, i, j);
-				}
-			}
+			
+			PathFinding.runAllPairShortestPath((BasicTileMap)theTileMap);
+				
 			//PathFinding.findPath(4, 5);
 		}
 		

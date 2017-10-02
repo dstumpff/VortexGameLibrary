@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
+import java.util.Stack;
 
 import vortex.gameentity.map.tilemap.BasicTileMap;
 
@@ -47,14 +48,20 @@ public class PathFinding {
 		int row = tileMap.getTiledMap().getHeight();
 		int col = tileMap.getTiledMap().getWidth();
 		
+		if(sRow >= row || sCol >= col || sRow < 0 || sCol < 0) {
+			return;
+		}
+		
 		boolean checkedAll = false;
 		Node[][] nodes = new Node[row][col];
 		PriorityQueue<Node> orderedDistances = new PriorityQueue<Node>(2, new NodeComparator());
 		PathingNode[][] pathingMap = tileMap.getPathingMap();
 		
-		if(pathingMap[sRow][sCol].pathable = false){
+		if(pathingMap[sRow][sCol].pathable == false){
 			return;
 		}
+		
+		System.out.println("Started");
 		
 		for(int i = 0; i < nodes.length; i++){
 			for(int j = 0; j < nodes[0].length; j++){
@@ -68,7 +75,6 @@ public class PathFinding {
 		orderedDistances.remove(nodes[sRow][sCol]);
 		nodes[sRow][sCol].distance = 0;
 		orderedDistances.add(nodes[sRow][sCol]);
-		
 		Node curNode = orderedDistances.poll();
 		for(int i = 0; i < row && !checkedAll; i++){
 			for(int j = 0; j < col && !checkedAll; j++){
@@ -99,11 +105,40 @@ public class PathFinding {
 		nodeMap = nodes;
 	}
 	
+	public static void runAllPairShortestPath(BasicTileMap tileMap) {
+		int row = tileMap.getTiledMap().getHeight();
+		int col = tileMap.getTiledMap().getWidth();
+		int threadCount = (int) Math.max(Math.ceil((double)row/5), Math.ceil((double)col/5));
+		System.out.println(threadCount);
+		Thread[] threads = new Thread[threadCount];
+		float startTime = System.currentTimeMillis();
+		for(int i = 0; i < threadCount; i++) {
+			threads[i] = new Thread(new PathFindingWorkerThread(tileMap, 5 * i, 5 * (i+1), 5 * i, 5 * (i+1)));
+			threads[i].start();
+		}
+		for(int i = 0; i < threadCount; i++) {
+			try {
+				threads[i].join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		float endTime = System.currentTimeMillis();
+	}
+	
 	public static void findPath(int r, int c){
 		Node curNode = nodeMap[r][c];
+		Stack<Node> path = new Stack<Node>();
 		while(curNode.from != null){
-			System.out.println("r: " + curNode.row + ", c: " + curNode.col);
+			//System.out.println("r: " + curNode.row + ", c: " + curNode.col);
+			path.push(curNode);
 			curNode = curNode.from;
+		}
+		
+		while(!path.isEmpty()) {
+			curNode = path.pop();
+			System.out.println("r: " + curNode.row + ", c: " + curNode.col);
 		}
 	}
 	
