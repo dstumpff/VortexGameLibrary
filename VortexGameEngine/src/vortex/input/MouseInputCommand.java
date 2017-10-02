@@ -1,7 +1,5 @@
 package vortex.input;
 
-import vortex.Game;
-
 /**
  * Contains values for mouse button commands. Button commands are used in the MouseInput class to link a command with input from the mouse.
  * 

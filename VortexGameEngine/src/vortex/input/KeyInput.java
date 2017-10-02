@@ -1,11 +1,8 @@
 package vortex.input;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.TreeMap;
-
 
 /**
  * Handles registering commands for keyboard input. Assigning commands will allow you to organize what key input does.

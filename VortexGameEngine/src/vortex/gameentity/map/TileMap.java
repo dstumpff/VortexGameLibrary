@@ -1,18 +1,12 @@
 package vortex.gameentity.map;
 
-import java.util.ArrayList;
-
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.SpriteSheet;
-import org.newdawn.slick.tiled.TileSet;
 import org.newdawn.slick.tiled.TiledMap;
 
 import vortex.Game;
-import vortex.GameEntity;
-import vortex.collision.*;
 import vortex.gameentity.Map;
 
 /**
@@ -57,8 +51,6 @@ public abstract class TileMap extends Map{
 		this.setY(y);
 		this.setWidth(theTileMap.getWidth() * theTileMap.getTileWidth());
 		this.setHeight(theTileMap.getHeight() * theTileMap.getTileHeight());
-		TileSet theTileSet = theTileMap.getTileSet(0);
-		SpriteSheet sheet = theTileSet.tiles;
 	}
 	
 	public void update(GameContainer gc, int i){

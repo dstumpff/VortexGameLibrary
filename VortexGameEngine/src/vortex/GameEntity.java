@@ -7,7 +7,6 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Point;
 
-import vortex.collision.CollisionRectangle;
 import vortex.collision.CollisionShape;
 import vortex.collision.CollisionShapeConvex;
 import vortex.gameentity.*;

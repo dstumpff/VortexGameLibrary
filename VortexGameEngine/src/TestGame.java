@@ -107,6 +107,8 @@ public class TestGame extends GameDriver{
 			System.out.println("LEFT: " + theTileMap.getLeftBound() + " RIGHT: " + theTileMap.getRightBound() + " UPPER: " + theTileMap.getUpperBound() + " LOWER: " + theTileMap.getLowerBound());
 			theTileMap.setViewCollision(true);
 			Game.setGameMap(theTileMap);
+			PathFinding.setup(((BasicTileMap)(theTileMap)).getTiledMap().getHeight(),
+					((BasicTileMap)(theTileMap)).getTiledMap().getHeight());
 		}catch(SlickException e){
 			e.printStackTrace();
 		}
@@ -227,14 +229,14 @@ public class TestGame extends GameDriver{
 		
 		
 		
-		//BackgroundMusic.addSongToQueue("01.-title.mp3");
-		/*BackgroundMusic.addSongToQueue("08.-bonus-level.mp3");
+		BackgroundMusic.addSongToQueue("01.-title.mp3");
+		BackgroundMusic.addSongToQueue("08.-bonus-level.mp3");
 		
 		try{
 			BackgroundMusic.playAllInQueue();
 		}catch(JavaLayerException e){
 			e.printStackTrace();
-		}*/
+		}
 	}
 	
 	@Override
@@ -248,7 +250,7 @@ public class TestGame extends GameDriver{
 			
 			PathFinding.runAllPairShortestPath((BasicTileMap)theTileMap);
 				
-			//PathFinding.findPath(4, 5);
+			PathFinding.findPath(7, 6, 4, 5);
 		}
 		
 		/*if(KeyInput.get("PauseTextbox").isPressed()){

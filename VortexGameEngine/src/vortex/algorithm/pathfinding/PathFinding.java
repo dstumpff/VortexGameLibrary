@@ -1,7 +1,6 @@
 package vortex.algorithm.pathfinding;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Stack;
@@ -37,12 +36,21 @@ class NodeComparator implements Comparator<Node>{
 }
 
 public class PathFinding {
-	protected static Node[][] nodeMap;
+	protected static Node[][][][] nodeMap;
+	protected static boolean nodeMapCreated = false;
+	
+	public static void setup(int row, int col) {
+		nodeMap = new Node[row][col][row][col];
+		nodeMapCreated = true;
+	}
 	
 	/**
 	 * Finds the paths from the Specified Node to all other nodes using Dijkstra's Algorithm.
 	 */
-	public static void runDijkstra(BasicTileMap tileMap, int sRow, int sCol){
+	protected static void runDijkstra(BasicTileMap tileMap, int sRow, int sCol){
+		if(!nodeMapCreated) {
+			return;
+		}
 		long startNano = System.nanoTime();
 		long startMilli = System.currentTimeMillis();
 		int row = tileMap.getTiledMap().getHeight();
@@ -51,6 +59,9 @@ public class PathFinding {
 		if(sRow >= row || sCol >= col || sRow < 0 || sCol < 0) {
 			return;
 		}
+		//if(nodeMap == null) {
+		//	nodeMap = new Node[99][99][99][99];
+		//}
 		
 		boolean checkedAll = false;
 		Node[][] nodes = new Node[row][col];
@@ -101,8 +112,7 @@ public class PathFinding {
 		long endMilli = System.currentTimeMillis();
 		System.out.println("Runtime: Nano: " + (endNano - startNano) + ", Milli: " + (endMilli - startMilli));
 		
-		
-		nodeMap = nodes;
+		nodeMap[sRow][sCol] = nodes;
 	}
 	
 	public static void runAllPairShortestPath(BasicTileMap tileMap) {
@@ -110,8 +120,10 @@ public class PathFinding {
 		int col = tileMap.getTiledMap().getWidth();
 		int threadCount = (int) Math.max(Math.ceil((double)row/5), Math.ceil((double)col/5));
 		System.out.println(threadCount);
+		if(!nodeMapCreated) {
+			setup(tileMap.getTiledMap().getHeight(), tileMap.getTiledMap().getWidth());
+		}
 		Thread[] threads = new Thread[threadCount];
-		float startTime = System.currentTimeMillis();
 		for(int i = 0; i < threadCount; i++) {
 			threads[i] = new Thread(new PathFindingWorkerThread(tileMap, 5 * i, 5 * (i+1), 5 * i, 5 * (i+1)));
 			threads[i].start();
@@ -124,14 +136,12 @@ public class PathFinding {
 				e.printStackTrace();
 			}
 		}
-		float endTime = System.currentTimeMillis();
 	}
 	
-	public static void findPath(int r, int c){
-		Node curNode = nodeMap[r][c];
+	public static void findPath(int sRow, int sCol, int eRow, int eCol){
+		Node curNode = nodeMap[sRow][sCol][eRow][eCol];
 		Stack<Node> path = new Stack<Node>();
 		while(curNode.from != null){
-			//System.out.println("r: " + curNode.row + ", c: " + curNode.col);
 			path.push(curNode);
 			curNode = curNode.from;
 		}
@@ -166,5 +176,10 @@ public class PathFinding {
 		}
 		
 		return neighbors.toArray(new Node[0]);
+	}
+	
+	public static void reset() {
+		nodeMap = null;
+		nodeMapCreated = false;
 	}
 }
