@@ -44,9 +44,9 @@ public class ResourceLoader {
 			throw new FileNotFoundException();
 		}
 		
-		Scanner file = new Scanner(is);
+		Scanner fileScanner = new Scanner(is);
 		
-		return file;
+		return fileScanner;
 	}
 	
 	public static Textbox createTextbox(String path) throws TextboxException{

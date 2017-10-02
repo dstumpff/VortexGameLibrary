@@ -138,7 +138,7 @@ public class PathFinding {
 		}
 	}
 	
-	public static void findPath(int sRow, int sCol, int eRow, int eCol){
+	public static Node[] findPath(int sRow, int sCol, int eRow, int eCol){
 		Node curNode = nodeMap[sRow][sCol][eRow][eCol];
 		Stack<Node> path = new Stack<Node>();
 		while(curNode.from != null){
@@ -146,10 +146,16 @@ public class PathFinding {
 			curNode = curNode.from;
 		}
 		
+		Node[] pathList = new Node[path.size()];
+		int count = 0;
 		while(!path.isEmpty()) {
 			curNode = path.pop();
+			pathList[count] = curNode;
+			count++;
 			System.out.println("r: " + curNode.row + ", c: " + curNode.col);
 		}
+		
+		return pathList;
 	}
 	
 	private static Node[] findNeighbors(BasicTileMap tileMap, PathingNode[][] pathingMap, int row, int col){

@@ -229,14 +229,14 @@ public class TestGame extends GameDriver{
 		
 		
 		
-		BackgroundMusic.addSongToQueue("01.-title.mp3");
+		/*BackgroundMusic.addSongToQueue("01.-title.mp3");
 		BackgroundMusic.addSongToQueue("08.-bonus-level.mp3");
 		
 		try{
 			BackgroundMusic.playAllInQueue();
 		}catch(JavaLayerException e){
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 	@Override
