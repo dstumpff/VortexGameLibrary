@@ -173,6 +173,7 @@ public class SpriteAnimation{
 	
 	public void setFrameDelay(int frames){
 		frameDelay = frames;
+		delayAmount = frameDelay;
 	}
 	
 	public int getFrameDelay(){

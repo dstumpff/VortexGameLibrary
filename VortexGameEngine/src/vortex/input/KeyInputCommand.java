@@ -43,7 +43,8 @@ public class KeyInputCommand {
 	}
 	
 	public void setKeyUp(boolean keyUp){
-		keyDown = keyHeld = false;
+		keyDown = false;
+		keyHeld = false;
 		this.keyUp = keyUp;
 	}
 	

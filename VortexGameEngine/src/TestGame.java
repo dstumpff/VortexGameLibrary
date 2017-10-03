@@ -16,11 +16,17 @@ import vortex.GameDriver;
 import vortex.GameEntity;
 import vortex.event.ConfirmboxEvent;
 import vortex.event.ConfirmboxListener;
+import vortex.event.StateEdgeCondition;
+import vortex.event.StateEvent;
+import vortex.event.StateListener;
 import vortex.event.TextboxEvent;
 import vortex.event.TextboxListener;
 import vortex.event.TimerEvent;
 import vortex.event.TimerListener;
+import vortex.exception.StateException;
 import vortex.exception.TextboxException;
+import vortex.exception.stateexception.IllegalModificationException;
+import vortex.exception.stateexception.StateControllerNotRunningException;
 import vortex.gameentity.Camera;
 import vortex.gameentity.Map;
 import vortex.gameentity.Pawn;
@@ -34,6 +40,8 @@ import vortex.gameentity.timer.RealTimer;
 import vortex.input.KeyInput;
 import vortex.input.MouseInput;
 import vortex.sound.*;
+import vortex.statemachine.State;
+import vortex.statemachine.StateController;
 import vortex.utilities.ResourceLoader;
 import static vortex.sound.BackgroundMusic.*;
 import vortex.algorithm.pathfinding.*;
@@ -51,6 +59,7 @@ public class TestGame extends GameDriver{
 	PathFinding pathFinder;
 	Pawn player3;
 	Camera pawnCamera;
+	StateController controller = new StateController();
 	SpriteAnimation anim;
 	public static boolean dialogMode = false;
 	Game game;
@@ -216,6 +225,76 @@ public class TestGame extends GameDriver{
 		//gameEntities.add(gameTimer);
 		gameEntities.add(realTimer);
 		
+		State firstState = new State();
+		firstState.addStateListener(new StateListener() {
+
+			@Override
+			public void stateEvent(StateEvent e) {
+				player1.stopAnimation();
+			}
+		});
+		State secondState = new State();
+		secondState.addStateListener(new StateListener() {
+
+			@Override
+			public void stateEvent(StateEvent e) {
+				player1.runAnimation(0);
+			}
+		});
+		
+		State thirdState = new State();
+		thirdState.addStateListener(new StateListener() {
+
+			@Override
+			public void stateEvent(StateEvent e) {
+				player1.runAnimation(1);
+			}
+		});
+		controller = new StateController();
+		try {
+			controller.addState(firstState);
+			controller.addState(secondState);
+			controller.addState(thirdState);
+			controller.setStartState(firstState);
+			controller.addEdge(0, 1, new StateEdgeCondition() {
+
+				@Override
+				public boolean condition() {
+					return ((TestPlayer)(player1)).right;
+				}
+			});
+			
+			controller.addEdge(1, 0, new StateEdgeCondition() {
+
+				@Override
+				public boolean condition() {
+					return !((TestPlayer)(player1)).right;
+				}
+			});
+			
+			controller.addEdge(0, 2, new StateEdgeCondition(){
+
+				@Override
+				public boolean condition() {
+					return ((TestPlayer)(player1)).left;
+				}
+				
+			});
+			controller.addEdge(2, 0, new StateEdgeCondition(){
+
+				@Override
+				public boolean condition() {
+					return !((TestPlayer)(player1)).left;
+				}
+				
+			});
+			
+			controller.start();
+		} catch (StateException | IllegalModificationException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		KeyInput.addInputCommand("Move+X", Input.KEY_RIGHT, 0);
 		KeyInput.addInputCommand("Move-X", Input.KEY_LEFT, 0);
 		KeyInput.addInputCommand("Move+Y", Input.KEY_DOWN, 0);
@@ -244,6 +323,13 @@ public class TestGame extends GameDriver{
 		//player2.setMovement(2, 0);
 		for(int j = 0; j < gameEntities.size(); j++){
 			gameEntities.get(j).update(gc, i);
+		}
+		
+		try {
+			controller.update();
+		} catch (StateControllerNotRunningException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		if(KeyInput.get("Start Dialog").getKeyDown()){

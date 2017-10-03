@@ -12,7 +12,7 @@ import vortex.sound.SoundEffect;
 
 public class TestPlayer extends Pawn {
 	
-	boolean left, right, up, down;
+	public boolean left, right, up, down;
 	float movementMagnitude = 5;
 	
 	public TestPlayer(){
@@ -31,7 +31,7 @@ public class TestPlayer extends Pawn {
 	}
 	
 	public void setupAnimations(){
-		/*SpriteAnimation anim;
+		SpriteAnimation anim;
 		anim = new SpriteAnimation(getX(), getY(), this);
 		anim.loadSpriteSheet("runningcatscaled.png", 4, 2, SpriteAnimation.LEFT_DOWN);
 		anim.setFrameDelay(5);
@@ -42,7 +42,7 @@ public class TestPlayer extends Pawn {
 		anim.loadSpriteSheet("runningcatscaledleft.png", 4, 2, SpriteAnimation.RIGHT_DOWN);
 		anim.setFrameDelay(5);
 		anim.setLooping(true);
-		addAnimation(anim);*/
+		addAnimation(anim);
 	}
 	
 	public void update(GameContainer gc, int i){
@@ -84,11 +84,10 @@ public class TestPlayer extends Pawn {
 			
 			if(left && !(up || down)){
 				setMovement(movementMagnitude, 180);
-				runAnimation(1);
+				
 			}
 			if(right && !(up || down)){
 				setMovement(movementMagnitude, 0);
-				runAnimation(0);
 			}
 			if(up && !(left || right)){
 				setMovement(movementMagnitude, 90);

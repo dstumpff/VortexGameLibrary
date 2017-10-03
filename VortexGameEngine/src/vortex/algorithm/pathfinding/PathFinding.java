@@ -59,9 +59,6 @@ public class PathFinding {
 		if(sRow >= row || sCol >= col || sRow < 0 || sCol < 0) {
 			return;
 		}
-		//if(nodeMap == null) {
-		//	nodeMap = new Node[99][99][99][99];
-		//}
 		
 		boolean checkedAll = false;
 		Node[][] nodes = new Node[row][col];
